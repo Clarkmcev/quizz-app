@@ -8,7 +8,7 @@ import { useState } from 'react';
 // Types
 import { QuestionState, Difficulty } from './API';
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
@@ -23,7 +23,7 @@ export default function Home() {
   const [number, setNumber] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
 
   const startTrivia = async () => {
     setLoading(true);
@@ -35,36 +35,72 @@ export default function Home() {
     );
 
     setQuestions(newQuestions);
+
     setScore(0);
     setUserAnswers([]);
     setNumber(0);
+    setLoading(false);
   };
 
-  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {};
+  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!gameOver) {
+      const answer = e.currentTarget.value
+      const correct = questions[number].correct_answer === answer;
+      
+      if (correct) setScore(prev => prev + 1)
 
-  const nextQuestion = () => {};
+      const answerObject = {
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answer
+      };
+
+      setUserAnswers(prev => [...prev, answerObject] )
+
+    }
+  };
+
+  const nextQuestion = () => {
+    // Move on to the next question if not the last
+
+    const nextQuestion = number + 1;
+
+    if (nextQuestion === TOTAL_QUESTIONS) {
+      setGameOver(true)
+    } else {
+      setNumber(nextQuestion)
+    }
+  };
 
   return (
-    <main className="">
-      <h1>QUIZ</h1>
+    <main className="flex flex-col space-y-2 bg-custom1 h-screen text-custom4">
+      <h1 className="text-center p-10 text-2xl">Quiz application</h1>
       {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button className="start" onClick={startTrivia}>
-          Start
+        <button className="p-4 bg-custom1 hover:text-white duration-100 transition-all" onClick={startTrivia}>
+          Start a new quiz
         </button>
       ) : null}
-      <p className="score">Score:</p>
-      <p>Loading questions ...</p>
-      {/* <QuestionCard
-        questionNr={number + 1}
-        totalQuestions={TOTAL_QUESTIONS}
-        question={questions[number].question}
-        answers={questions[number].answers}
-        userAnswer={userAnswers ? userAnswers[number] : undefined}
-        callback={checkAnswer}
-      /> */}
-      <button className="next" onClick={nextQuestion}>
-        Next questions
-      </button>
+      {loading ? <p>Loading questions ...</p> : null}
+      {!loading && !gameOver ? (
+        <QuestionCard
+          score={score}
+          questionNr={number + 1}
+          totalQuestions={TOTAL_QUESTIONS}
+          question={questions[number].question}
+          answers={questions[number].answers}
+          userAnswer={userAnswers ? userAnswers[number] : undefined}
+          callback={checkAnswer}
+        />
+      ) : null}
+      {!gameOver &&
+      !loading &&
+      userAnswers.length === number + 1 &&
+      number !== TOTAL_QUESTIONS ? (
+        <button className="p-2 bg-custom2 w-fit mx-auto rounded text-custom1 hover:bg-custom3 hover:text-white" onClick={nextQuestion}>
+          Next question
+        </button>
+      ) : null}
     </main>
   );
 }
