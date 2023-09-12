@@ -8,10 +8,10 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      custom1 : '#0A2647',
-      custom2 : '#144272',
-      custom3 : '#205295',
-      custom4 : '#2C74B3',
+      custom1 : '#22577E',
+      custom2 : '#5584AC',
+      custom3 : '#95D1CC',
+      custom4 : '#FAFFAF',
       'white': '#ffffff',
       'purple': '#3f3cbb',
       'midnight': '#121063',
