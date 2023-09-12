@@ -7,6 +7,7 @@ import QuestionCard from './components/QuestionCard';
 import { useState } from 'react';
 // Types
 import { QuestionState, Difficulty } from './API';
+import Spinner from './components/Spinner';
 
 export type AnswerObject = {
   question: string;
@@ -75,13 +76,13 @@ export default function Home() {
 
   return (
     <main className="flex flex-col space-y-2 bg-custom1 h-screen text-custom4">
-      <h1 className="text-center p-10 text-2xl">Quiz application</h1>
+      <h1 className="text-center p-10 text-4xl">Quiz application</h1>
       {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
         <button className="p-4 bg-custom1 hover:text-white duration-100 transition-all" onClick={startTrivia}>
           Start a new quiz
         </button>
       ) : null}
-      {loading ? <p>Loading questions ...</p> : null}
+      {loading ? <Spinner/> : null}
       {!loading && !gameOver ? (
         <QuestionCard
           score={score}
@@ -96,8 +97,8 @@ export default function Home() {
       {!gameOver &&
       !loading &&
       userAnswers.length === number + 1 &&
-      number !== TOTAL_QUESTIONS ? (
-        <button className="p-2 bg-custom2 w-fit mx-auto rounded text-custom1 hover:bg-custom3 hover:text-white" onClick={nextQuestion}>
+      number !== TOTAL_QUESTIONS - 1 ? (
+        <button className="p-2 bg-custom2 w-fit mx-auto rounded text-custom1 hover:bg-custom3 hover:text-white duration transition-all" onClick={nextQuestion}>
           Next question
         </button>
       ) : null}

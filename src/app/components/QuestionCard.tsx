@@ -22,7 +22,7 @@ const QuestionCard: React.FC<Props> = ({
   score,
 }) => {
   return (
-    <div className="mx-auto max-w-5xl w-max rounded p-6">
+    <div className="mx-auto max-w-5xl w-full rounded p-6">
       <div>
         <div className="justify-between flex text-custom4">
           <p>
